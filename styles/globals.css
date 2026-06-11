@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------ */
+/* Design tokens — warm, soft, premium.                                */
+/* Raw RGB triplets so Tailwind can compose alpha values.              */
+/* ------------------------------------------------------------------ */
+
+:root {
+  /* Light — warm cream, never clinical white */
+  --background: 250 247 242;
+  --foreground: 30 26 21;
+  --card: 255 253 249;
+  --muted: 240 234 225;
+  --muted-foreground: 110 102 91;
+  --border: 228 220 208;
+  --accent: 176 95 51; /* deep copper — AA on cream */
+  --accent-soft: 232 168 124; /* warm apricot for glows */
+  --accent-foreground: 255 251 246;
+}
+
+.dark {
+  /* Dark — warm charcoal with candlelight accents */
+  --background: 18 16 13;
+  --foreground: 240 235 227;
+  --card: 27 24 20;
+  --muted: 39 35 29;
+  --muted-foreground: 168 159 146;
+  --border: 48 43 36;
+  --accent: 232 168 124; /* apricot — AA on charcoal */
+  --accent-soft: 232 168 124;
+  --accent-foreground: 28 22 16;
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: rgb(var(--accent) / 0.25);
+  }
+
+  /* Visible, soft focus rings everywhere — accessibility is non-negotiable */
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Thin, warm scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--background));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--border));
+    border-radius: 8px;
+    border: 2px solid rgb(var(--background));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--muted-foreground) / 0.5);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Reusable composition utilities                                      */
+/* ------------------------------------------------------------------ */
+
+@layer components {
+  .container-site {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12;
+  }
+
+  .section-pad {
+    @apply py-24 sm:py-32 lg:py-40;
+  }
+
+  /* Subtle glassmorphism — used sparingly */
+  .glass {
+    @apply border border-border/60 bg-card/60 backdrop-blur-xl;
+  }
+
+  /* Warm gradient text for headline emphasis */
+  .text-gradient {
+    @apply bg-gradient-to-r from-accent via-accent-soft to-accent bg-[length:200%_auto] bg-clip-text text-transparent;
+  }
+
+  /* 1px gradient border via background trick */
+  .gradient-border {
+    position: relative;
+    background:
+      linear-gradient(rgb(var(--card)), rgb(var(--card))) padding-box,
+      linear-gradient(
+          135deg,
+          rgb(var(--accent) / 0.5),
+          rgb(var(--border)) 40%,
+          rgb(var(--accent-soft) / 0.4)
+        )
+        border-box;
+    border: 1px solid transparent;
+  }
+
+  /* Dotted background grid that fades at the edges */
+  .bg-grid {
+    background-image: radial-gradient(
+      rgb(var(--foreground) / 0.07) 1px,
+      transparent 1px
+    );
+    background-size: 28px 28px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 75%);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Reduced motion — respect the user, always                           */
+/* ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Lenis recommended styles */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
